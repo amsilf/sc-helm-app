@@ -47,5 +47,10 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ | yq e -o=json > $(Build.BuildId)-chart.json'
-            displayName: 'Helm chart to json'
+              script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ | yq -s "(.kind | downcase) + "_" + .metadata.name"'
+            displayName: 'Helm chart to yml files'
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
+            displayName: 'yaml to json'
