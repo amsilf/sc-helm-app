@@ -28,10 +28,8 @@ stages:
         steps:
           - checkout: self
             fetchDepth: 1
-          - task: Bash@3
-            inputs:
-              targetType: inline
-              script: 'ls -tlra'
+          - checkout: PolicyRepository
+            fetchDepth: 1
           - task: Bash@3
             inputs:
               targetType: inline
@@ -52,18 +50,19 @@ stages:
             inputs:
               targetType: inline
               script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ | yq -s "(.kind | downcase)"'
-              workingDirectory: "$(System.DefaultWorkingDirectory)/sc-helm-app/"
             displayName: 'Helm chart to yml files'
           - task: Bash@3
             inputs:
               targetType: inline
               script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
-              workingDirectory: "$(System.DefaultWorkingDirectory)/sc-helm-app/"
             displayName: 'yaml to json'
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: 'ls -tlra'
           - task: Bash@3
             inputs:
               targetType: inline
               script: |
                 opa eval -i $(System.DefaultWorkingDirectory)/sc-helm-app/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
-              workingDirectory: "$(System.DefaultWorkingDirectory)/sc-helm-app/"
             displayName: 'Execute OPA rules'
