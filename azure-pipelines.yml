@@ -1,0 +1,46 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: sc-assigment
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+    - repository: PolicyRepository
+      type: github
+      endpoint: amsilf
+      name: amsilf/sc-policy-repo
+      ref: main
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        pool:
+          name: sc-assigment
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            fetchDepth: 1
+          - task: HelmInstaller@1
+            inputs:
+              helmVersionToInstall: 'latest'
+          - task: OpenPolicyAgentInstaller@0
+            inputs:
+              opaVersion: 'latest'
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: 'wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq'
+            displayName: 'Install yq'
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ | yq e -o=json > $(Build.BuildId)-chart.json'
+            displayName: 'Helm chart to json'
