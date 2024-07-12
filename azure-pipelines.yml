@@ -33,10 +33,9 @@ stages:
               targetType: inline
               script: 'sudo apt-get -y install zip'
             displayName: 'Install zip'
-          - task: HelmInstaller@0
+          - task: HelmInstaller@1
             inputs:
-              helmVersion: '2.14.1'
-              installKubectl: true
+              helmVersionToInstall: 'latest'
           - task: OpenPolicyAgentInstaller@0
             inputs:
               opaVersion: 'latest'
