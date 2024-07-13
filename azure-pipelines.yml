@@ -51,13 +51,14 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: 'chmod 775 ./to_json.sh'
+              script: 'chmod 777 to_json.sh'
               workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
-            displayName: 'Save Helm Chart'
+            displayName: 'Grant execution permissions'
           - task: Bash@3
             inputs:
-              filePath: './to_json.sh'
+              filePath: 'to_json.sh'
               workingDirectory: '$(System.DefaultWorkingDirectory)/sc-helm-app'
+            displayName: 'To json'
 
           # - task: Bash@3
           #   inputs:
@@ -74,12 +75,12 @@ stages:
             inputs:
               targetType: inline
               script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
-              workingDirectory: $(System.DefaultWorkingDirectory)
+              workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
             displayName: 'yaml to json'
           - task: Bash@3
             inputs:
               targetType: inline
-              script: 'ls -tlra $(System.DefaultWorkingDirectory)'
+              script: 'ls -tlra $(System.DefaultWorkingDirectory)/sc-helm-app'
           - task: Bash@3
             inputs:
               targetType: inline
