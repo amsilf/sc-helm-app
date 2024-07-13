@@ -52,7 +52,7 @@ stages:
             inputs:
               targetType: inline
               script: 'chmod 755 to_json.sh'
-              workingDirectory: $(System.DefaultWorkingDirectory)
+              workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
             displayName: 'Save Helm Chart'
           - task: Bash@3
             inputs:
