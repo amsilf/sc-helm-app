@@ -57,7 +57,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                cat helm-chart.yml | yq -s "(.kind | downcase)"
+                cat $(System.DefaultWorkingDirectory)/helm-chart.yml | yq -s '(.kind | downcase)'
             displayName: 'Helm chart to yml files'
   
           - task: Bash@3
