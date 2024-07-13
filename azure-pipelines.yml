@@ -77,7 +77,7 @@ stages:
             inputs:
               targetType: inline
               script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
-              workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
+              workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: 'yaml to json'
           - task: Bash@3
             inputs:
@@ -87,5 +87,5 @@ stages:
             inputs:
               targetType: inline
               script: |
-                opa eval -i $(System.DefaultWorkingDirectory)/sc-helm-app/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
+                opa eval -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
             displayName: 'Execute OPA rules'
