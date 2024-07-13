@@ -51,13 +51,13 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: 'chmod 777 to_json.sh'
+              script: 'chmod 755 to_json.sh'
               workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
             displayName: 'Grant execution permissions'
           - task: Bash@3
             inputs:
-              filePath: 'to_json.sh'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/sc-helm-app'
+              filePath: '$(System.DefaultWorkingDirectory)/sc-helm-app/to_json.sh'
+              arguments: '$(System.DefaultWorkingDirectory)/sc-helm-app'
             displayName: 'To json'
 
           # - task: Bash@3
