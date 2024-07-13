@@ -51,13 +51,24 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ > $(System.DefaultWorkingDirectory)/helm-chart.yml'
+              script: 'chmod 755 to_json.sh'
+              workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: 'Save Helm Chart'
           - task: Bash@3
             inputs:
-              targetType: inline
-              script: 'cat $(System.DefaultWorkingDirectory)/helm-chart.yml | yq --split-exp "(.kind | downcase)"'
-            displayName: 'Helm chart to yml files'
+              filePath: 'to_json.sh'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/sc-helm-app'
+
+          # - task: Bash@3
+          #   inputs:
+          #     targetType: inline
+          #     script: 'helm template $(System.DefaultWorkingDirectory)/sc-helm-app/sc-helm-chart/ > $(System.DefaultWorkingDirectory)/helm-chart.yml'
+          #   displayName: 'Save Helm Chart'
+          # - task: Bash@3
+          #   inputs:
+          #     targetType: inline
+          #     script: 'cat $(System.DefaultWorkingDirectory)/helm-chart.yml | yq --split-exp "(.kind | downcase)"'
+          #   displayName: 'Helm chart to yml files'
   
           - task: Bash@3
             inputs:
