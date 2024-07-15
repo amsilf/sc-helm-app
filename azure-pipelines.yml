@@ -40,9 +40,6 @@ stages:
           - task: HelmInstaller@1
             inputs:
               helmVersionToInstall: 'latest'
-          - task: OpenPolicyAgentInstaller@0
-            inputs:
-              opaVersion: 'latest'
           - task: Bash@3
             inputs:
               targetType: inline
@@ -64,11 +61,9 @@ stages:
               script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
               workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: 'yaml to json'
-      - job: Test
-        dependsOn: Build
-        pool:
-          vmImage: ubuntu-latest
-        steps:
+          - task: OpenPolicyAgentInstaller@0
+            inputs:
+              opaVersion: 'latest'
           - task: Bash@3
             inputs:
               targetType: inline
@@ -76,7 +71,7 @@ stages:
                 opa eval --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
             displayName: 'Execute OPA rules'
       - job: Fix
-        dependsOn: Test
+        dependsOn: Build
         condition: failed()
         pool:
           vmImage: ubuntu-latest
