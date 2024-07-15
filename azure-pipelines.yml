@@ -77,7 +77,11 @@ stages:
         pool:
           vmImage: ubuntu-latest
         steps:
-          - task: PythonScript@0
+          - task: UsePythonVersion@0
             inputs:
-              scriptSource: 'inline'
-              script: 'python -m pip install -r (System.DefaultWorkingDirectory)/sc-policy-repo/pull-request-fix/requirements.txt'
+              versionSpec: '3.12'
+            displayName: "Install python 3.12"
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r $(System.DefaultWorkingDirectory)/sc-policy-repo/pull-request-fix/requirements.txt
+            displayName: 'Install dependencies'
