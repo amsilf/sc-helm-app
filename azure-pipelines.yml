@@ -61,6 +61,7 @@ stages:
               workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: 'yaml to json'
       - job: Test
+        dependsOn: Build
         pool:
           vmImage: ubuntu-latest
         steps:
