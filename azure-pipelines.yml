@@ -84,6 +84,7 @@ stages:
           - checkout: PolicyRepository
             fetchDepth: 1
           - script: |
+              ls -tlra $(System.DefaultWorkingDirectory)/
               ls -tlra $(System.DefaultWorkingDirectory)/sc-policy-repo
               ls -tlra $(System.DefaultWorkingDirectory)/sc-policy-repo/pull-request-fix/
           - script: |
