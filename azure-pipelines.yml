@@ -54,20 +54,29 @@ stages:
               targetType: inline
               script: 'cat $(System.DefaultWorkingDirectory)/helm-chart.yml | $(System.DefaultWorkingDirectory)/yq --split-exp "(.kind | downcase)"'
             displayName: 'Helm chart to yml files'
-  
           - task: Bash@3
             inputs:
               targetType: inline
               script: 'for f in *.yml; do yq e -o=json ${f} > ${f%.*}.json ; done;'
               workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: 'yaml to json'
-          - task: Bash@3
-            inputs:
-              targetType: inline
-              script: 'ls -tlra $(System.DefaultWorkingDirectory)/'
+      - job: Test
+        pool:
+          vmImage: ubuntu-latest
+        steps:
           - task: Bash@3
             inputs:
               targetType: inline
               script: |
-                opa eval --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
+                opa eval --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data' > execution-result.log
             displayName: 'Execute OPA rules'
+      - job: Fix
+        dependsOn: Test
+        condition: failed()
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: PythonScript@0
+            inputs:
+              scriptSource: 'inline'
+              script: 'python -m pip install -r (System.DefaultWorkingDirectory)/sc-policy-repo/pull-request-fix/requirements.txt'
