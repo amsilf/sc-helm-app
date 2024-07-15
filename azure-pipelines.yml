@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  - group: Github
+  - group: PullRequestToFixViolations
+
 resources:
   repositories:
     - repository: PolicyRepository
@@ -87,3 +91,7 @@ stages:
               python -m pip install --upgrade pip
               pip install -r $(System.DefaultWorkingDirectory)/pull-request-fix/requirements.txt
             displayName: 'Install dependencies'
+          - task: PythonScript@0
+            inputs:
+              scriptPath: '$(System.DefaultWorkingDirectory)/pull-request-fix/create_branch_and_pr.py'
+              arguments: '$(OPENAI_KEY) $(GIT_TOKEN)'
