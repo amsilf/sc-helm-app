@@ -69,5 +69,5 @@ stages:
             inputs:
               targetType: inline
               script: |
-                opa eval --fail --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
+                opa eval --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
             displayName: 'Execute OPA rules'
