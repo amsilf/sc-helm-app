@@ -1,6 +1,7 @@
-# Declare variables to be passed into your templates.
+#yaml
+# Increased replicaCount to 2 to meet the requirement that replicas should be larger than 2.
 
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: nginx
