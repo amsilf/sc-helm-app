@@ -92,8 +92,6 @@ stages:
               pip install -r $(System.DefaultWorkingDirectory)/pull-request-fix/requirements.txt
             displayName: 'Install dependencies'
           - script: |
-              echo "$(OPENAI_KEY)"
-              echo "$(GIT_TOKEN)"
               python $(System.DefaultWorkingDirectory)/pull-request-fix/create_branch_and_pr.py $(OPENAI_KEY) $(GIT_TOKEN)
           # - task: PythonScript@0
           #   inputs:
