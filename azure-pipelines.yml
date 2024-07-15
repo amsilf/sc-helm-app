@@ -93,7 +93,4 @@ stages:
             displayName: 'Install dependencies'
           - script: |
               python $(System.DefaultWorkingDirectory)/pull-request-fix/create_branch_and_pr.py $(OPENAI_KEY) $(GIT_TOKEN)
-          # - task: PythonScript@0
-          #   inputs:
-          #     scriptPath: '$(System.DefaultWorkingDirectory)/pull-request-fix/create_branch_and_pr.py'
-          #     arguments: '$(OPENAI_KEY) $(GIT_TOKEN)'
+            displayName: "Attempt to fix the violation and raise a pull request"
