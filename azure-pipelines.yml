@@ -81,6 +81,8 @@ stages:
             inputs:
               versionSpec: '3.12'
             displayName: "Install python 3.12"
+          - checkout: PolicyRepository
+            fetchDepth: 1
           - script: |
               ls -tlra $(System.DefaultWorkingDirectory)/sc-policy-repo
               ls -tlra $(System.DefaultWorkingDirectory)/sc-policy-repo/pull-request-fix/
