@@ -44,24 +44,6 @@ stages:
               targetType: inline
               script: 'wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O $(System.DefaultWorkingDirectory)/yq && chmod +x $(System.DefaultWorkingDirectory)/yq'
             displayName: 'Install yq'
-
-          # - task: Bash@3
-          #   inputs:
-          #     targetType: inline
-          #     script: 'sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y'
-          #   displayName: 'Install yq'
-          # - task: Bash@3
-          #   inputs:
-          #     targetType: inline
-          #     script: 'chmod 755 to_json.sh'
-          #     workingDirectory: $(System.DefaultWorkingDirectory)/sc-helm-app
-          #   displayName: 'Grant execution permissions'
-          # - task: Bash@3
-          #   inputs:
-          #     filePath: '$(System.DefaultWorkingDirectory)/sc-helm-app/to_json.sh'
-          #     arguments: '$(System.DefaultWorkingDirectory)/sc-helm-app'
-          #   displayName: 'To json'
-
           - task: Bash@3
             inputs:
               targetType: inline
@@ -87,5 +69,5 @@ stages:
             inputs:
               targetType: inline
               script: |
-                opa eval -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
+                opa eval --fail --fail-defined -i $(System.DefaultWorkingDirectory)/deployment.json -d $(System.DefaultWorkingDirectory)/sc-policy-repo/helm/availability/replica.rego 'data'
             displayName: 'Execute OPA rules'
