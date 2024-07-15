@@ -1,8 +1,11 @@
+yaml
+# The request is to ensure that the number of replicas is larger than 2. 
+
 # Default values for sc-helm-chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 3
 
 image:
   repository: nginx
